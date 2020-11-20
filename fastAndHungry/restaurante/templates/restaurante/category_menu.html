@@ -1,0 +1,63 @@
+{% extends 'restaurante/base.html' %}
+{% load static %}
+
+{% block body_content %}
+<!-- Masthead-->
+<section class="page-section bg-dark text-white">
+    <div class="container">
+
+        <h2 class="text-center mt-0">{{ category_name }}</h2>
+        <hr class="divider my-4" />
+
+        <div class="container-cards ">
+            {% for element in object_list %}
+            
+            <div class="col-lg-3 col-md-6 card-elem bg-dark-obs">
+          
+                <img {% if element.image %} src= "{{element.image.url}}"{% else %} src= "" {% endif %}  >
+                <h3 class="h4 mb-2 mt-2 text-primary font-weight-bold text-uppercase ">{{ element.name }}</h3>
+                <p class = "font-italic text-info">{{ element.description }}</p>
+                <p class="badge badge-primary text-wrap text-monospace "> $ {{ element.price }} pesos</p></p>
+
+                <form action="{% url 'restaurante:add_to_cart' element.id %}" method="POST">
+                    {% csrf_token %}
+                 
+                    {% for field in form %}
+
+       					{{ field.errors }}
+        				{{ field.label_tag }}
+                        {{ field }}
+                        
+ 					{% endfor %}
+                    <!-- <input class="btn btn-sm btn-info" type="submit" value="Agregar al carrito"> -->
+                    <br>  </br> 
+                    <button type="submit" class="btn btn-success">
+
+                        <i class="fa fa-cart-plus"></i> Agregar a carrito
+                    </button>
+                </form>
+        
+            </div>
+
+            {% endfor %}
+        </div>
+    
+    </div>
+</section>
+
+
+<script>
+    /* Because i didnt set a width iuse vainilla javascript
+     * We start indexing at one because CSRF_token is considered and input field 
+     */
+
+    //Query All input fields
+    var form_fields = document.getElementsByTagName('input')
+    var fields_num = form_fields.length
+
+    for (var i = 1; i < fields_num; i++){	
+        form_fields[i].style = 'width : 30%'
+    }
+</script>
+
+{% endblock body_content %}
